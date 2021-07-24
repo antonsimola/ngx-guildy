@@ -10,12 +10,11 @@ import {GuildyComponentOptionsExt} from "../guildy-component.decorator";
 export class ComponentLibraryComponent implements OnInit {
   components: GuildyComponentOptionsExt[] = [];
 
-  constructor(private guildyService: NgxGuildyService) {
+  constructor(public guildyService: NgxGuildyService) {
     this.components = guildyService.guildyComponents;
   }
 
   ngOnInit(): void {
-    console.log(this.components);
   }
 
 

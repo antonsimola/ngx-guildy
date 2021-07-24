@@ -1,14 +1,9 @@
 import {Component, ComponentFactoryResolver, Input, OnInit, Type, ViewContainerRef} from '@angular/core';
 import {NgxGuildyService} from "./ngx-guildy.service";
-import {CdkDragDrop, moveItemInArray} from "@angular/cdk/drag-drop";
+import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
 import {GuildyComponentOptionsExt} from "./guildy-component.decorator";
-
-function uuidv4() {
-  // @ts-ignore
-  return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
-    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-  );
-}
+import {uuidv4} from "./helper";
+import {Observable} from "rxjs";
 
 
 @Component({
@@ -25,6 +20,8 @@ export class GuildyEditorComponent implements OnInit {
   color = 50;
   @Input()
   depth = 0;
+  dndId!: string;
+  dndContainerIds!: Observable<string[]>;
 
 
   getHsl() {
@@ -33,37 +30,48 @@ export class GuildyEditorComponent implements OnInit {
 
 
   constructor(private guildyService: NgxGuildyService, private componentFactoryResolver: ComponentFactoryResolver) {
-
   }
 
   ngOnInit(): void {
+    this.dndId = this.depth == 0 ? 'guildy-editor' : uuidv4();
+    setTimeout(() => {
+      this.guildyService.addDndContainer(this.dndId);
+    }, 0);
+    this.dndContainerIds = this.guildyService.dndContainerIds;
+
     this.componentMap = this.guildyService.guildyComponents.reduce((acc, cur) => {
       acc[cur.name] = cur;
       return acc;
     }, {} as { [key: string]: GuildyComponentOptionsExt })
   }
 
+  ngOnDestroy() {
+    this.guildyService.removeDndContainer(this.dndId);
+  }
+
   inspectComponent(compType: Type<any>) {
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(compType);
-    console.log(componentFactory);
     return {hasContent: componentFactory.ngContentSelectors.length > 0};
   }
 
   onDrop(event: CdkDragDrop<GuildyComponentOptionsExt[], any>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(this.aliveComponents, event.previousIndex, event.currentIndex);
-    } else {
+    if (!this.guildyService.dndContainerIds.getValue().includes(event.previousContainer.id)) {
       const id = uuidv4();
       const componentMeta = this.componentMap[event.item.data];
-
-
       this.aliveComponents.splice(event.currentIndex, 0, {
           id: id,
           ...this.componentMap[event.item.data],
           ...this.inspectComponent(componentMeta.ctor)
         }
       )
-      console.log(this.aliveComponents);
+    } else if (event.previousContainer === event.container) {
+      moveItemInArray(this.aliveComponents, event.previousIndex, event.currentIndex);
+    } else {
+
+      setTimeout(() => {
+        transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
+      }, 0)
+
     }
   }
 }

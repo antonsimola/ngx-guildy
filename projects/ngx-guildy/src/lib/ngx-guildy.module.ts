@@ -5,7 +5,11 @@ import {ComponentLibraryComponent} from './component-library/component-library.c
 import {CommonModule} from "@angular/common";
 import {DragDropModule} from "@angular/cdk/drag-drop";
 import {DynamicComponent} from "./dynamic-component/dynamic-component.component";
+import {installPatch} from "./patch-dnd";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
+
+installPatch();
 
 @NgModule({
   declarations: [
@@ -14,6 +18,7 @@ import {DynamicComponent} from "./dynamic-component/dynamic-component.component"
     DynamicComponent,
   ],
   imports: [
+    BrowserAnimationsModule,
     CommonModule,
     DragDropModule
   ],

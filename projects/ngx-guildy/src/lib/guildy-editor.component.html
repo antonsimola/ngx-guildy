@@ -1,11 +1,11 @@
-<div #editor class="guildy-editor" [id]="depth == 0 ? 'guildy-editor' : 'guildy-editor'+depth"
-     [ngStyle]="{backgroundColor: getHsl()  }"
+<div *ngIf="dndContainerIds" class="guildy-editor" [id]="dndId"
      cdkDropList
      [cdkDropListData]="aliveComponents"
-     (cdkDropListDropped)="onDrop($event)"
->
+     [cdkDropListConnectedTo]="(dndContainerIds | async) ?? ''"
+     (cdkDropListDropped)="onDrop($event)">
   <div *ngFor="let comp of aliveComponents;index as i" cdkDrag>
-    <div #content [hidden]="!comp.hasContent">
+    <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
+    <div #content [hidden]="!comp.hasContent" class="ng-content-placeholder">
       <guildy-editor *ngIf="comp.hasContent" [color]="color+20" [depth]="depth +1"></guildy-editor>
     </div>
     <ndc-dynamic [ndcDynamicComponent]="comp.ctor" [ndcDynamicContent]="[[content]]">

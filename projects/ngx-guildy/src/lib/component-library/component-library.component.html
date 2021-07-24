@@ -1,4 +1,5 @@
 <div cdkDropList
-     cdkDropListConnectedTo="guildy-editor">
+     id="guildy-component-library"
+     [cdkDropListConnectedTo]="(this.guildyService.dndContainerIds | async) ?? ''">
   <div *ngFor="let comp of components" cdkDrag [cdkDragData]="comp.name">{{comp.name}}</div>
 </div>
