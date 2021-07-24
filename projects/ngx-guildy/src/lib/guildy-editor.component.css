@@ -1,0 +1,9 @@
+.guildy-editor {
+  min-width: 200px;
+  min-height: 100px;
+  //background-color: aqua;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}

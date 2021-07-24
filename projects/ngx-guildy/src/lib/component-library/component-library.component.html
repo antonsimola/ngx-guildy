@@ -1,0 +1,4 @@
+<div cdkDropList
+     cdkDropListConnectedTo="guildy-editor">
+  <div *ngFor="let comp of components" cdkDrag [cdkDragData]="comp.name">{{comp.name}}</div>
+</div>

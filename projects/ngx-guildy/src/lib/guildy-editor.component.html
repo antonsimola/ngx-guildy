@@ -1,0 +1,14 @@
+<div #editor class="guildy-editor" [id]="depth == 0 ? 'guildy-editor' : 'guildy-editor'+depth"
+     [ngStyle]="{backgroundColor: getHsl()  }"
+     cdkDropList
+     [cdkDropListData]="aliveComponents"
+     (cdkDropListDropped)="onDrop($event)"
+>
+  <div *ngFor="let comp of aliveComponents;index as i" cdkDrag>
+    <div #content [hidden]="!comp.hasContent">
+      <guildy-editor *ngIf="comp.hasContent" [color]="color+20" [depth]="depth +1"></guildy-editor>
+    </div>
+    <ndc-dynamic [ndcDynamicComponent]="comp.ctor" [ndcDynamicContent]="[[content]]">
+    </ndc-dynamic>
+  </div>
+</div>

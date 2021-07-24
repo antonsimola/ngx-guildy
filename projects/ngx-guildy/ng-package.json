@@ -1,0 +1,8 @@
+{
+  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../dist/ngx-guildy",
+  "allowedNonPeerDependencies": ["ng-dynamic-component", "@angular/cdk"],
+  "lib": {
+    "entryFile": "src/public-api.ts"
+  }
+}
