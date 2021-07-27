@@ -1,4 +1,6 @@
 <mat-card>
-  <mat-card-title>{{title}}</mat-card-title>
-  <ng-content></ng-content>
+  <mat-card-title><span contenteditable="true" [(ngModel)]="title" ></span></mat-card-title>
+  <mat-card-content>
+    <ng-content></ng-content>
+  </mat-card-content>
 </mat-card>

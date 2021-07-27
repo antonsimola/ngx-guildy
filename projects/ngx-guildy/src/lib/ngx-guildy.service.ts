@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {NgxGuildyModule} from "./ngx-guildy.module";
-import {GuildyComponentOptionsExt} from "./guildy-component.decorator";
+import {GuildyComponentOptions} from "./guildy-component.decorator";
 import {BehaviorSubject} from "rxjs";
 
 @Injectable({providedIn: "root"})
 export class NgxGuildyService {
-  guildyComponents: GuildyComponentOptionsExt[] = [];
+  guildyComponents: GuildyComponentOptions[] = [];
 
   //TODO should be per editor somehow
   dndContainerIds = new BehaviorSubject<string[]>([]);

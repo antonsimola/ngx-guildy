@@ -1,2 +1,11 @@
-<guildy-editor></guildy-editor>
-<guildy-component-library></guildy-component-library>
+<div fxLayout="row" fxLayoutGap="32px">
+  <div fxFlex="75">
+    <guildy-editor>
+      <app-my-card #cardComponent guildyContainer [hostComponent]="cardComponent"></app-my-card>
+    </guildy-editor>
+  </div>
+  <div fxFlex>
+    <app-my-component-library></app-my-component-library>
+  </div>
+</div>
+

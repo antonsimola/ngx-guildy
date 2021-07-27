@@ -1,14 +1,14 @@
 import {NgxGuildyModule} from "./ngx-guildy.module";
+import {ComponentPortal, ComponentType} from "@angular/cdk/portal";
 
 export interface GuildyComponentOptions {
+  portal?: ComponentPortal<any>;
   name: string;
   editorType?: new (...args: any[]) => any;
-}
-
-export interface GuildyComponentOptionsExt extends GuildyComponentOptions {
-  ctor: new (...args: any[]) => any;
+  ctor?: ComponentType<any>;
   id?: string;
   hasContent?: boolean;
+  extra?: any;
 }
 
 

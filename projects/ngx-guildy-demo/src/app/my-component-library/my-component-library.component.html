@@ -1,0 +1,10 @@
+
+<div fxLayout="column" cdkDropList [cdkDropListConnectedTo]="(guildyService.dndContainerIds | async)  ?? ''">
+  <ng-container *ngFor="let comp of components">
+    <button cdkDrag mat-stroked-button [cdkDragData]="comp.name">
+      <div style="display: none" *cdkDragPreview></div>
+      <div style="display: none" *cdkDragPlaceholder></div>
+      {{comp.name}}</button>
+  </ng-container>
+</div>
+

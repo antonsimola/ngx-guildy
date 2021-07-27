@@ -1,14 +1,21 @@
-<div *ngIf="dndContainerIds" class="guildy-editor" [id]="dndId"
+<div *ngIf="_dndContainerIds" class="guildy-editor wrapper-div" [id]="_dndId"
      cdkDropList
+     cdkDropListOrientation="vertical"
      [cdkDropListData]="aliveComponents"
-     [cdkDropListConnectedTo]="(dndContainerIds | async) ?? ''"
+
+     [cdkDropListConnectedTo]="(_dndContainerIds | async) ?? ''"
      (cdkDropListDropped)="onDrop($event)">
-  <div *ngFor="let comp of aliveComponents;index as i" cdkDrag>
-    <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
-    <div #content [hidden]="!comp.hasContent" class="ng-content-placeholder">
+  <div *ngFor="let comp of aliveComponents;index as i" class="wrapper-div" cdkDrag (cdkDragStarted)="copy(i,$event)">
+    <div style="display: none" *cdkDragPreview></div>
+    <div style="display:none" *cdkDragPlaceholder></div>
+    <div  #content [hidden]="!comp.hasContent" class="ng-content-placeholder wrapper-div">
       <guildy-editor *ngIf="comp.hasContent" [color]="color+20" [depth]="depth +1"></guildy-editor>
     </div>
-    <ndc-dynamic [ndcDynamicComponent]="comp.ctor" [ndcDynamicContent]="[[content]]">
+    <ndc-dynamic [ndcDynamicComponent]="$any(comp.ctor)" [ndcDynamicContent]="[[content]]">
     </ndc-dynamic>
   </div>
 </div>
+<div style="visibility: hidden" *ngIf="!inited">
+  <ng-content *ngIf="!inited"></ng-content>
+</div>
+

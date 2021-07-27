@@ -6,7 +6,7 @@ import {GuildyComponent} from "ngx-guildy";
   templateUrl: './my-addable.component.html',
   styleUrls: ['./my-addable.component.scss']
 })
-@GuildyComponent({name: "MyAddableComponent"})
+@GuildyComponent({name: "Text"})
 export class MyAddableComponent implements OnInit {
   static counter = 0;
   id: number;

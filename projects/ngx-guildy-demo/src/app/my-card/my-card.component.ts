@@ -6,7 +6,7 @@ import {GuildyComponent} from "ngx-guildy";
   templateUrl: './my-card.component.html',
   styleUrls: ['./my-card.component.scss']
 })
-@GuildyComponent({name: "MyCardComponent"})
+@GuildyComponent({name: "Card"})
 export class MyCardComponent implements OnInit {
   @Input()
   title: string = "Title";
@@ -17,4 +17,7 @@ export class MyCardComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  change($event: any) {
+    console.log($event);
+  }
 }
