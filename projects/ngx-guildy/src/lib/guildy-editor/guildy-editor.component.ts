@@ -21,7 +21,7 @@ import {
   DragRef,
   DropListOrientation,
   DropListRef,
-  moveItemInArray
+  moveItemInArray, transferArrayItem
 } from "@angular/cdk/drag-drop";
 import {GuildyComponentOptions} from "../guildy-component.decorator";
 import {uuidv4} from "../helper";
@@ -105,7 +105,7 @@ export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.childrenCount = this.initialContainers.length;
         this.initialContainers.forEach(e => {
           const id = uuidv4();
-        this.init(e.hostComponent.constructor);
+          this.init(e.hostComponent.constructor);
 
         });
       }
@@ -134,7 +134,7 @@ export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit {
         viewContainer: this.dropListViewContainerRef,
         context: null
       });
-      drag.data = this.componentConstructorsMap.get(componentType)!.name;
+      drag.data = {compRef: compRef, name: this.componentConstructorsMap.get(componentType)!.name};
     }
 
 
@@ -144,12 +144,13 @@ export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit {
     else this.draggables = [];
 
 
-    this.dndList = this.dnd.createDropList(this.dropListElementRef).withItems(this.draggables);
+    this.dndList = this.dnd.createDropList(this.dropListElementRef);
+    this.refreshDraggables();
 
     this.orientation = this.determineDirection(this.dropListElementRef);
     this.guildyService.currentOrientation$.next(this.orientation);
     this.dndList.withOrientation(this.orientation);
-    this.dndList.data = this._dndId;
+    this.dndList.data = this;
 
     this.guildyService.addDndContainer(this._dndId, this.dndList);
     this.dndList.beforeStarted.subscribe(event => {
@@ -179,15 +180,19 @@ export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit {
     const ngContent = this.resolveNgContent(GuildyEditorComponent);
     const compRef = this.mainViewRef.createComponent(componentFactory, position, this.mainViewRef.injector, ngContent);
     const drag = this.dnd.createDrag(compRef.location);
-    compRef.hostView.detectChanges();
     drag.withPlaceholderTemplate({
       template: this.placeholderRef,
       viewContainer: this.dropListViewContainerRef,
       context: null
     });
+    drag.data = {name: null, compRef: compRef};
     this.draggables.splice(position, 0, drag);
-    this.dndList.withItems(this.draggables);
+    this.refreshDraggables();
     compRef.hostView.detectChanges();
+  }
+
+  refreshDraggables() {
+    this.dndList.withItems(this.draggables);
   }
 
   swapComponent(from: number, to: number) {
@@ -195,14 +200,45 @@ export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit {
     moveItemInArray(this.draggables, from, to);
   }
 
-  private transferComponent(ref: any) {
+  private transferComponent(event: CdkDragDrop<any, any>) {
+    const viewToMove = event.previousContainer.data.mainViewRef.detach(event.previousIndex);
+    const newViewRef = this.mainViewRef.insert(viewToMove, event.currentIndex);
+    console.log(event.previousContainer.data.draggables[event.previousIndex]);
+    transferArrayItem(event.previousContainer.data.draggables, this.draggables, event.previousIndex, event.currentIndex);
+    event.previousContainer.data.refreshDraggables();
+    console.log(this.draggables[event.currentIndex]);
+    const oldDraggable = this.draggables[event.currentIndex];
+    const refreshedDraggable = this.dnd.createDrag(oldDraggable.data.compRef.location);
+    refreshedDraggable.data = this.draggables[event.currentIndex].data;
+    refreshedDraggable.withPlaceholderTemplate({
+      template: this.placeholderRef,
+      viewContainer: this.dropListViewContainerRef,
+      context: null
+    });
+    oldDraggable.dispose();
+    this.draggables[event.currentIndex] = refreshedDraggable;
+    this.refreshDraggables();
+    this.guildyService.refreshDropListConnections();
+    newViewRef.detectChanges();
+    console.log(this.draggables[event.currentIndex]);
 
+    // const index = this._inputContainer.indexOf(this._componentRef.hostView);
+    //
+    // this._inputContainer.detach(index);
+    //
+    // this._itemsContainer.insert(this._componentRef.hostView);
+    //
+    // this._componentRef =
+    //   this._inputContainer.createComponent(this._componentFactory);
+    //
+    // this._componentRef.changeDetectorRef.detectChanges();
   }
 
-  onDrop(event: CdkDragDrop<GuildyComponentOptions[], any>) {
-    if (!this.guildyService.dndContainerIds$.getValue().map(d => d.id).includes(event.previousContainer.data)) {
+  onDrop(event: CdkDragDrop<any, any>) {
+    console.log(this.dndList);
+    if (!this.guildyService.dndContainerIds$.getValue().map(d => d.id).includes(event.previousContainer.data._dndId)) {
       const id = uuidv4();
-      const componentMeta = this.componentMap.get(event.item.data)!;
+      const componentMeta = this.componentMap.get(event.item.data.name)!;
 
 
       setTimeout(() => {
@@ -213,11 +249,11 @@ export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit {
     } else if (event.previousContainer === event.container) {
       this.swapComponent(event.previousIndex, event.currentIndex);
     } else {
-      if (event.previousContainer.data == "library") {
-        const componentMeta = this.componentMap.get(event.item.data)!;
+      if (event.previousContainer.data._dndId == "library") {
+        const componentMeta = this.componentMap.get(event.item.data.name)!;
         this.insertComponent(componentMeta.ctor!, event.currentIndex);
       } else {
-
+        this.transferComponent(event);
         //this.transferComponent
       }
 
@@ -231,12 +267,6 @@ export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit {
   private determineDirection(dropListElementRef: ElementRef): DropListOrientation {
     const flexDirection = getComputedStyle(dropListElementRef.nativeElement).flexDirection;
     return flexDirection.startsWith("row") ? 'horizontal' : 'vertical';
-
-  }
-
-  private makeTemporaryDropList() {
-    const templ = this.mainViewRef.createEmbeddedView(this.ngContentSlot);
-
   }
 }
 

@@ -27,8 +27,7 @@ export class ComponentLibraryComponent implements OnInit {
   orientation$ = this.guildyService.currentOrientation$;
 
 
-
-  constructor(public guildyService: NgxGuildyService,private dnd: DragDrop) {
+  constructor(public guildyService: NgxGuildyService, private dnd: DragDrop) {
     this.components = guildyService.guildyComponents;
   }
 
@@ -38,12 +37,12 @@ export class ComponentLibraryComponent implements OnInit {
   ngAfterViewInit() {
     this.dropRef = this.dnd.createDropList(this.dropList);
     this.guildyService.addDndContainer('library', this.dropRef);
-    this.dropRef.data = "library";
+    this.dropRef.data = {_dndId: "library"};
 
-    const drags = this.componentDefinitions.map(e => ({dRef:this.dnd.createDrag(e.element), cRef: e}));
+    const drags = this.componentDefinitions.map(e => ({dRef: this.dnd.createDrag(e.element), cRef: e}));
 
     drags.forEach(d => {
-       d.dRef.data = d.cRef.data;
+      d.dRef.data = {name: d.cRef.data};
       d.dRef.withPlaceholderTemplate({
         template: this.placeholderRef,
         viewContainer: this.dropListView,

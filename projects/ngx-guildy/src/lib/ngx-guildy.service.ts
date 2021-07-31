@@ -17,12 +17,17 @@ export class NgxGuildyService {
     NgxGuildyModule.guildyComponentConstructors.forEach(i => this.guildyComponents.push(i));
 
 
-    this.dndContainerIds$.subscribe(containers => {
-      for (let loop1 of containers) {
-        loop1.ref.connectedTo(containers.map(r => r.ref));
-
-      }
+    this.dndContainerIds$.subscribe(() => {
+      this.refreshDropListConnections();
     })
+  }
+
+  refreshDropListConnections() {
+    const containers = this.dndContainerIds$.getValue();
+    for (let loop1 of containers) {
+      loop1.ref.connectedTo(containers.map(r => r.ref));
+
+    }
   }
 
   addDndContainer(id: string, ref: DropListRef) {
