@@ -18,6 +18,6 @@ export class MyCardComponent implements OnInit {
   }
 
   change($event: any) {
-    console.log($event);
+
   }
 }

@@ -1,0 +1,45 @@
+<!--<div #mainContainer class="guildy-editor wrapper-div" [id]="_dndId"-->
+<!--     cdkDropList-->
+<!--     cdkDropListOrientation="vertical"-->
+<!--     [cdkDropListData]="aliveComponents"-->
+<!--     [cdkDropListConnectedTo]="(_dndContainerIds | async) ?? ''"-->
+<!--     (cdkDropListDropped)="onDrop($event)">-->
+<!--  <div #dragdiv *ngFor="let comp of aliveComponents;index as i" class="wrapper-div" cdkDrag>-->
+<!--    <div style="display: none" *cdkDragPreview></div>-->
+<!--    <div style="height: 1px;width:100%;border-top: 3px solid lightseagreen" *cdkDragPlaceholder></div>-->
+<!--    <div #content [hidden]="!comp.hasContent" class="ng-content-placeholder wrapper-div">-->
+<!--      <guildy-editor *ngIf="comp.hasContent" [color]="color+20" [depth]="depth +1"></guildy-editor>-->
+<!--    </div>-->
+<!--    <ndc-dynamic [ndcDynamicComponent]="$any(comp.ctor)" [ndcDynamicContent]="[[content]]">-->
+<!--    </ndc-dynamic>-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--Capture the initial content and make it dynamic-->
+<div style="visibility: hidden" *ngIf="!inited">
+  <ng-content *ngIf="!inited"></ng-content>
+</div>
+
+
+
+
+<div #dropList
+     style="display: flex;flex-direction: row;min-width: 100px;min-height: 50px" [id]="_dndId">
+  <ng-container #dynRef>
+  </ng-container>
+</div>
+
+<!--<ng-content></ng-content>-->
+<ng-template #placeholder>
+  <div  [ngStyle]="orientation == 'vertical' ?
+   {height:'1px', width: 'auto', borderTop:'3px solid lightseagreen'}:
+  {height:'auto', minHeight:'10px', width: '3px', borderRight:'3px solid lightseagreen'}"></div>
+</ng-template>
+<ng-template #preview>
+  <div style="display: none"></div>
+</ng-template>
+
+<ng-template #ngContentTemplate>
+  <div style="min-width: 200px;min-height: 50px;background-color: aquamarine"></div>
+</ng-template>
+

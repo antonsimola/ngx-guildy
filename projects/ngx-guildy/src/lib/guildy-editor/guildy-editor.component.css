@@ -13,16 +13,8 @@
   border: dimgray dashed 1px;
 }
 
-.example-custom-placeholder {
-  background-color: hsl(255, 100%, 50%);
-  border: hsl(255, 100%, 50%) dashed 1px;
-  min-height: 2px;
-  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
-
-
 .wrapper-div {
   width: auto;
   height: auto;
-  display: flex;
+  /*display: flex;*/
 }

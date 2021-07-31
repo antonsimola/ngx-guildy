@@ -10,8 +10,14 @@ import {GuildyComponent} from "ngx-guildy";
 export class MyButtonComponent implements OnInit {
   @Input()
   buttonText: string = "BUTTON TEXT";
+  staticIndex: any;
+  private static counter: number = 0;
 
-  constructor() { }
+  constructor() {
+
+    MyButtonComponent.counter += 1;
+    this.staticIndex = MyButtonComponent.counter;
+  }
 
   ngOnInit(): void {
   }
