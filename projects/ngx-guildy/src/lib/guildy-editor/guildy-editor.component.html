@@ -16,30 +16,25 @@
 <!--</div>-->
 
 <!--Capture the initial content and make it dynamic-->
-<div style="visibility: hidden" *ngIf="!inited">
-  <ng-content *ngIf="!inited"></ng-content>
+<div *ngIf="!inited" style="visibility: hidden">
+  <ng-content></ng-content>
 </div>
 
 
-
-
-<div #dropList
-     style="display: flex;flex-direction: row;min-width: 100px;min-height: 50px" [id]="_dndId">
-  <ng-container #dynRef>
-  </ng-container>
-</div>
+<ng-container #dynRef>
+</ng-container>
 
 <!--<ng-content></ng-content>-->
 <ng-template #placeholder>
-  <div  [ngStyle]="orientation == 'vertical' ?
+  <div [ngStyle]="_orientation == 'vertical' ?
    {height:'1px', width: 'auto', borderTop:'3px solid lightseagreen'}:
-  {height:'auto', minHeight:'10px', width: '3px', borderRight:'3px solid lightseagreen'}"></div>
+  {height:'auto', minHeight:'10px', width:'3px', borderRight:'3px solid lightseagreen'}"></div>
 </ng-template>
 <ng-template #preview>
   <div style="display: none"></div>
 </ng-template>
 
 <ng-template #ngContentTemplate>
-  <div style="min-width: 200px;min-height: 50px;background-color: aquamarine"></div>
+  <div style="min-width: 200px;min-height: 50px;background-color: bisque"></div>
 </ng-template>
 

@@ -1,20 +1,3 @@
-.guildy-editor {
-  min-width: 200px;
-  min-height: 20px;
-  width: 100%;
-  height: 100%;
-}
-
-.guildy-editor.cdk-drop-list-dragging .ng-content-placeholder {
-  border: darkgray dashed 1px;
-}
-
-.guildy-editor.cdk-drop-list-receiving .ng-content-placeholder {
-  border: dimgray dashed 1px;
-}
-
-.wrapper-div {
-  width: auto;
-  height: auto;
-  /*display: flex;*/
+:host {
+  display: contents;
 }

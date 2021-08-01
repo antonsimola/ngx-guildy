@@ -1,19 +1,16 @@
-import {Component, OnInit} from '@angular/core';
-import {GuildyComponent} from "ngx-guildy";
+import { Component, OnInit } from '@angular/core';
+import { GuildyComponent } from 'ngx-guildy';
 
 @Component({
-  selector: 'app-my-flex-container',
-  templateUrl: './my-flex-container.component.html',
-  styleUrls: ['./my-flex-container.component.scss']
+    selector: 'app-my-flex-container',
+    templateUrl: './my-flex-container.component.html',
+    styleUrls: ['./my-flex-container.component.scss'],
 })
-@GuildyComponent({name: "Flex"})
+@GuildyComponent({ name: 'Flex', editorType: FlexEditor })
 export class MyFlexContainerComponent implements OnInit {
-  isRow = true;
+    isRow = false;
 
-  constructor() {
-  }
+    constructor() {}
 
-  ngOnInit(): void {
-  }
-
+    ngOnInit(): void {}
 }

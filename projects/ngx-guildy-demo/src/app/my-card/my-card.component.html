@@ -1,6 +1,6 @@
 <mat-card>
-  <mat-card-title><span contenteditable="true" [(ngModel)]="title" ></span></mat-card-title>
-  <mat-card-content>
+  <mat-card-title><span [(ngModel)]="title" contenteditable="true" ></span></mat-card-title>
+  <mat-card-content style="min-height: 50px">
     <ng-content></ng-content>
   </mat-card-content>
 </mat-card>

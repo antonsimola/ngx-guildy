@@ -1,6 +1,11 @@
 {
   "name": "ngx-guildy",
   "version": "0.0.0",
+  "prettier": {
+    "tabWidth": 4,
+    "arrowParens": "avoid",
+    "printWidth": 120
+  },
   "scripts": {
     "ng": "ng",
     "start:lib": "ng build ngx-guildy --watch --configuration development",
@@ -39,6 +44,7 @@
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.5.0",
     "ng-packagr": "^12.1.0",
-    "typescript": "~4.3.2"
+    "typescript": "~4.3.2",
+    "prettier": "2.3.2"
   }
 }

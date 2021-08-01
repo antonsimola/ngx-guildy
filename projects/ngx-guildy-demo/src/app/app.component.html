@@ -1,11 +1,13 @@
 <div fxLayout="row" fxLayoutGap="32px" style="padding: 10vh">
   <div fxFlex="75" style="background-color: bisque">
     <guildy-editor>
-      <app-my-card #cardComponent guildyContainer [hostComponent]="cardComponent"></app-my-card>
+      <app-my-card #cardComponent [hostComponent]="cardComponent" guildyContainer></app-my-card>
     </guildy-editor>
   </div>
-  <div fxFlex>
+  <div fxFlex fxLayout="row" fxLayoutGap="16px">
     <app-my-component-library></app-my-component-library>
+    <guildy-component-settings></guildy-component-settings>
   </div>
+
 </div>
 
