@@ -1,1 +1,14 @@
 <mat-checkbox (ngModelChange)="isRowChanged.emit($event)" [(ngModel)]="isRow"> Is Row</mat-checkbox>
+
+<mat-form-field>
+  <input (ngModelChange)="colorChanged.emit($event)" [(ngModel)]="color" matInput type="color">
+</mat-form-field>
+
+<div fxLayout="row" fxLayoutAlign="start center">
+  <mat-label>Margin</mat-label><mat-slider (input)="marginChanged.emit($event.value!)" [(ngModel)]="margin"></mat-slider>
+</div>
+
+<div fxLayout="row" fxLayoutAlign="start center">
+  <mat-label>Padding</mat-label>
+  <mat-slider (input)="paddingChanged.emit($event.value!)" [(ngModel)]="padding"></mat-slider>
+</div>

@@ -10,6 +10,18 @@ export class FlexEditorComponent implements OnInit {
     isRow: boolean = false;
     @Output()
     isRowChanged = new EventEmitter<boolean>();
+    @Input()
+    color: string = '';
+    @Output()
+    colorChanged = new EventEmitter<string>();
+
+    @Input() padding: number = 16;
+    @Output()
+    paddingChanged = new EventEmitter<number>();
+
+    @Input() margin: number = 16;
+    @Output()
+    marginChanged = new EventEmitter<number>();
 
     constructor() {}
 

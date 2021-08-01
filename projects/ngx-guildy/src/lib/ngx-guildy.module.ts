@@ -11,6 +11,7 @@ import { GuildyMovableDirective } from './guildy-movable.directive';
 import { GuildyContainerDirective } from './guildy-container.directive';
 import { ContenteditableDirective } from './contenteditable.directive';
 import { PortalModule } from '@angular/cdk/portal';
+import { ComponentSettingsComponent } from './component-settings/component-settings.component';
 
 installPatch();
 
@@ -22,6 +23,7 @@ installPatch();
         GuildyMovableDirective,
         GuildyContainerDirective,
         ContenteditableDirective,
+        ComponentSettingsComponent,
     ],
     imports: [BrowserAnimationsModule, CommonModule, DragDropModule, PortalModule],
     exports: [
@@ -30,6 +32,7 @@ installPatch();
         GuildyContainerDirective,
         GuildyMovableDirective,
         ContenteditableDirective,
+        ComponentSettingsComponent,
     ],
 })
 export class NgxGuildyModule {

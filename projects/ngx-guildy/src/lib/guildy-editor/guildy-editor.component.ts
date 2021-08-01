@@ -84,12 +84,9 @@ export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit, 
 
     ngAfterContentInit(): void {
         //probably need to insert component here, instead of doing everything in the init...
-
-        console.log('ngAfterContentInit', this.depth);
     }
 
     ngAfterViewInit() {
-        console.log('ngAfterViewInit', this.depth);
         this.initialize();
     }
 
@@ -172,8 +169,8 @@ export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit, 
         this.initDraggables(componentType);
     }
 
-    insertComponent(componentCtor: ComponentType<any>, position: number) {
-        const componentFactory = this.componentFactoryResolver.resolveComponentFactory(componentCtor);
+    insertComponent(componentMeta: GuildyComponentOptions, position: number) {
+        const componentFactory = this.componentFactoryResolver.resolveComponentFactory(componentMeta.ctor!);
         const { content } = this.resolveNgContent(GuildyEditorComponent);
         const compRef = this.draggablesViewContainerRef.createComponent(
             componentFactory,
@@ -181,8 +178,18 @@ export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit, 
             this.draggablesViewContainerRef.injector,
             [[content.location.nativeElement]]
         );
+
         const drag = this.dnd.createDrag(compRef.location);
         compRef.hostView.detectChanges();
+        this.renderer.listen(compRef.location.nativeElement, 'click', e => {
+            console.log(componentMeta);
+            if (!componentMeta.clickThroughWhileEditing) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            this.guildyService.componentSelected$.next({ options: componentMeta, componentRef: compRef });
+        });
         drag.withPlaceholderTemplate({
             template: this.placeholderRef,
             viewContainer: this.viewContainerRef,
@@ -203,7 +210,6 @@ export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit, 
     }
 
     onDrop(event: CdkDragDrop<any, any>) {
-        console.log(this.dropListRef);
         if (
             !this.guildyService.dndContainerIds$
                 .getValue()
@@ -214,14 +220,14 @@ export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit, 
             const componentMeta = this.componentMap.get(event.item.data.name)!;
 
             setTimeout(() => {
-                this.insertComponent(componentMeta.ctor!, event.currentIndex);
+                this.insertComponent(componentMeta, event.currentIndex);
             }, 0);
         } else if (event.previousContainer === event.container) {
             this.swapComponent(event.previousIndex, event.currentIndex);
         } else {
             if (event.previousContainer.data._dndId == 'library') {
                 const componentMeta = this.componentMap.get(event.item.data.name)!;
-                this.insertComponent(componentMeta.ctor!, event.currentIndex);
+                this.insertComponent(componentMeta, event.currentIndex);
             } else {
                 this.transferComponent(event);
                 //this.transferComponent
@@ -272,7 +278,7 @@ export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit, 
     private transferComponent(event: CdkDragDrop<any, any>) {
         const viewToMove = event.previousContainer.data.draggablesViewContainerRef.detach(event.previousIndex);
         const newViewRef = this.draggablesViewContainerRef.insert(viewToMove, event.currentIndex);
-        console.log(event.previousContainer.data.draggables[event.previousIndex]);
+
         transferArrayItem(
             event.previousContainer.data.draggables,
             this.draggables,
@@ -280,7 +286,7 @@ export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit, 
             event.currentIndex
         );
         event.previousContainer.data.refreshDraggables();
-        console.log(this.draggables[event.currentIndex]);
+
         const oldDraggable = this.draggables[event.currentIndex];
         const refreshedDraggable = this.dnd.createDrag(oldDraggable.data.compRef.location);
 
@@ -298,7 +304,6 @@ export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit, 
     }
 
     private determineDirection(dropListElementRef: ElementRef | HTMLElement): DropListOrientation {
-        console.log(dropListElementRef);
         // @ts-ignore
 
         const element = dropListElementRef.nativeElement ?? dropListElementRef;

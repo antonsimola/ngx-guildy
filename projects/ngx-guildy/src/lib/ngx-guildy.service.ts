@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { ComponentRef, Injectable } from '@angular/core';
 import { NgxGuildyModule } from './ngx-guildy.module';
 import { GuildyComponentOptions } from './guildy-component.decorator';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { DropListOrientation, DropListRef } from '@angular/cdk/drag-drop';
 import { ComponentType } from '@angular/cdk/portal';
 
@@ -14,6 +14,7 @@ export class NgxGuildyService {
     dndContainerIds$ = new BehaviorSubject<{ id: string; ref: DropListRef }[]>([]);
 
     currentOrientation$ = new BehaviorSubject<DropListOrientation>('vertical');
+    componentSelected$ = new Subject<{ options: GuildyComponentOptions; componentRef: ComponentRef<any> }>();
 
     constructor() {
         NgxGuildyModule.guildyComponentConstructors.forEach(i => this.guildyComponents.push(i));

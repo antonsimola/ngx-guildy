@@ -1,28 +1,27 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {GuildyComponent} from "ngx-guildy";
+import { Component, Input, OnInit } from '@angular/core';
+import { GuildyComponent } from 'ngx-guildy';
+import { MyButtonEditorComponent } from './my-button-editor/my-button-editor.component';
 
 @Component({
-  selector: 'app-my-button',
-  templateUrl: './my-button.component.html',
-  styleUrls: ['./my-button.component.scss']
+    selector: 'app-my-button',
+    templateUrl: './my-button.component.html',
+    styleUrls: ['./my-button.component.scss'],
 })
-@GuildyComponent({name: "Button"})
+@GuildyComponent({ name: 'Button', editorType: MyButtonEditorComponent })
 export class MyButtonComponent implements OnInit {
-  @Input()
-  buttonText: string = "BUTTON TEXT";
-  staticIndex: any;
-  private static counter: number = 0;
+    private static counter: number = 0;
+    @Input()
+    buttonText: string = 'BUTTON TEXT';
+    staticIndex: any;
 
-  constructor() {
+    constructor() {
+        MyButtonComponent.counter += 1;
+        this.staticIndex = MyButtonComponent.counter;
+    }
 
-    MyButtonComponent.counter += 1;
-    this.staticIndex = MyButtonComponent.counter;
-  }
+    ngOnInit(): void {}
 
-  ngOnInit(): void {
-  }
-
-  log() {
-    console.log("hello");
-  }
+    log() {
+        console.log('hello');
+    }
 }

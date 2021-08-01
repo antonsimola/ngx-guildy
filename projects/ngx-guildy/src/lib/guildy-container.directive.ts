@@ -1,12 +1,10 @@
-import {Directive, ElementRef, Input, ViewContainerRef} from '@angular/core';
+import { Directive, ElementRef, Input, ViewContainerRef } from '@angular/core';
 
 @Directive({
-  selector: '[guildyContainer]'
+    selector: '[guildyContainer]',
 })
 export class GuildyContainerDirective {
+    @Input() hostComponent: any;
 
-  @Input() hostComponent: any;
-
-  constructor(private elementRef: ElementRef, private viewContainerRef: ViewContainerRef) {
-  }
+    constructor(private elementRef: ElementRef, private viewContainerRef: ViewContainerRef) {}
 }

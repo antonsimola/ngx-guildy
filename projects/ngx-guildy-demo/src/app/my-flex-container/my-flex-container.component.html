@@ -1,4 +1,7 @@
 <div [fxLayout]="isRow ?'row' :'column'"
+     [style.backgroundColor]="color"
+     [style.margin.px]="margin"
+     [style.padding.px]="padding"
      style="min-height: 20px;min-width: 20px; background-color:aquamarine;  padding: 16px">
   <ng-content></ng-content>
 </div>

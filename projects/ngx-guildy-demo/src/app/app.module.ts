@@ -17,6 +17,14 @@ import { FormsModule } from '@angular/forms';
 import { MyFlexContainerComponent } from './my-flex-container/my-flex-container.component';
 import { FlexEditorComponent } from './my-flex-container/flex-editor/flex-editor.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSliderModule } from '@angular/material/slider';
+import { TextEditorComponent } from './my-addable-component/text-editor/text-editor.component';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MyButtonEditorComponent } from './my-button/my-button-editor/my-button-editor.component';
 
 @NgModule({
     declarations: [
@@ -27,6 +35,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
         MyComponentLibraryComponent,
         MyFlexContainerComponent,
         FlexEditorComponent,
+        TextEditorComponent,
+        MyButtonEditorComponent,
     ],
     imports: [
         BrowserModule,
@@ -39,6 +49,12 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
         FlexModule,
         FormsModule,
         MatCheckboxModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSliderModule,
+        MatExpansionModule,
+        MatDividerModule,
+        MatTabsModule,
     ],
     providers: [],
     bootstrap: [AppComponent],

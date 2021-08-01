@@ -1,0 +1,5 @@
+<mat-form-field>
+  <mat-label>Button Text</mat-label>
+  <input
+    (ngModelChange)="buttonTextChanged.emit($event)" [(ngModel)]="buttonText" matInput>
+</mat-form-field>
