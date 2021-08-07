@@ -9,6 +9,7 @@ import { DragDrop } from '@angular/cdk/drag-drop';
 })
 export class MyComponentLibraryComponent implements OnInit, AfterViewInit {
     components: GuildyComponentOptions[];
+
     constructor(public guildyService: NgxGuildyService, private dnd: DragDrop) {
         this.components = this.guildyService.guildyComponents;
     }

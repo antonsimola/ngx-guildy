@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NgxGuildyModule } from 'ngx-guildy';
-import { MyAddableComponent } from './my-addable-component/my-addable.component';
+import { MyTextComponent } from './my-addable-component/my-text.component';
 import { MyButtonComponent } from './my-button/my-button.component';
 import { MyCardComponent } from './my-card/my-card.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -25,11 +25,12 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MyButtonEditorComponent } from './my-button/my-button-editor/my-button-editor.component';
+import { CardEditorComponent } from './my-card/card-editor/card-editor.component';
 
 @NgModule({
     declarations: [
         AppComponent,
-        MyAddableComponent,
+        MyTextComponent,
         MyButtonComponent,
         MyCardComponent,
         MyComponentLibraryComponent,
@@ -37,6 +38,7 @@ import { MyButtonEditorComponent } from './my-button/my-button-editor/my-button-
         FlexEditorComponent,
         TextEditorComponent,
         MyButtonEditorComponent,
+        CardEditorComponent,
     ],
     imports: [
         BrowserModule,

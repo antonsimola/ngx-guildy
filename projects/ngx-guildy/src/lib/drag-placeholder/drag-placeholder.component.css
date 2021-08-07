@@ -1,0 +1,6 @@
+.guildy-drag-placeholder {
+  width: auto;
+  height: auto;
+  min-width: 20px;
+  border: grey dashed 1px;
+}

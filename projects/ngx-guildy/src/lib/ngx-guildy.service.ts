@@ -1,9 +1,9 @@
 import { ComponentRef, Injectable } from '@angular/core';
-import { NgxGuildyModule } from './ngx-guildy.module';
 import { GuildyComponentOptions } from './guildy-component.decorator';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { DropListOrientation, DropListRef } from '@angular/cdk/drag-drop';
 import { ComponentType } from '@angular/cdk/portal';
+import { ComponentStructure } from './guildy-editor/guildy-editor.component';
 
 @Injectable({ providedIn: 'root' })
 export class NgxGuildyService {
@@ -14,10 +14,18 @@ export class NgxGuildyService {
     dndContainerIds$ = new BehaviorSubject<{ id: string; ref: DropListRef }[]>([]);
 
     currentOrientation$ = new BehaviorSubject<DropListOrientation>('vertical');
-    componentSelected$ = new Subject<{ options: GuildyComponentOptions; componentRef: ComponentRef<any> }>();
+    componentSelected$ = new Subject<{
+        options: GuildyComponentOptions;
+        componentRef: ComponentRef<any>;
+        structure: ComponentStructure;
+    }>();
+    structureChanged$ = new Subject<any>();
+    deleteRequested$ = new Subject<string>();
 
     constructor() {
-        NgxGuildyModule.guildyComponentConstructors.forEach(i => this.guildyComponents.push(i));
+        (window as any).guildyComponentConstructors.forEach((i: GuildyComponentOptions) =>
+            this.guildyComponents.push(i)
+        );
 
         this.guildyComponents.forEach(c => this.componentMap.set(c.name, c));
         this.guildyComponents.forEach(c => this.componentConstructorsMap.set(c.ctor!, c));

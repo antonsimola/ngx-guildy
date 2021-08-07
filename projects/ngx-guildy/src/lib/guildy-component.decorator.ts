@@ -1,4 +1,3 @@
-import { NgxGuildyModule } from './ngx-guildy.module';
 import { ComponentType } from '@angular/cdk/portal';
 
 export interface GuildyComponentOptions {
@@ -13,6 +12,9 @@ export interface GuildyComponentOptions {
 
 export function GuildyComponent(options: GuildyComponentOptions) {
     return function (ctor: new (...args: any[]) => any) {
-        NgxGuildyModule.guildyComponentConstructors.push({ ...options, ctor: ctor });
+        if (!(window as any).guildyComponentConstructors) {
+            (window as any).guildyComponentConstructors = [];
+        }
+        (window as any).guildyComponentConstructors.push({ ...options, ctor: ctor });
     };
 }

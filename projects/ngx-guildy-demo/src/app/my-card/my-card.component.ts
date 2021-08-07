@@ -1,23 +1,22 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {GuildyComponent} from "ngx-guildy";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { GuildyComponent } from 'ngx-guildy';
+import { CardEditorComponent } from './card-editor/card-editor.component';
 
 @Component({
-  selector: 'app-my-card',
-  templateUrl: './my-card.component.html',
-  styleUrls: ['./my-card.component.scss']
+    selector: 'app-my-card',
+    templateUrl: './my-card.component.html',
+    styleUrls: ['./my-card.component.scss'],
 })
-@GuildyComponent({name: "Card"})
+@GuildyComponent({ name: 'Card', editorType: CardEditorComponent })
 export class MyCardComponent implements OnInit {
-  @Input()
-  title: string = "Title";
+    @Input()
+    title: string = 'Title';
+    @Output()
+    titleChanged = new EventEmitter<string>();
 
-  constructor() {
-  }
+    constructor() {}
 
-  ngOnInit(): void {
-  }
+    ngOnInit(): void {}
 
-  change($event: any) {
-
-  }
+    change($event: any) {}
 }

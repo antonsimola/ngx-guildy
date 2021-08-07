@@ -1,0 +1,4 @@
+<mat-form-field>
+  <mat-label>Title</mat-label>
+  <input (ngModelChange)="titleChanged.emit($event)" [(ngModel)]="title" matInput>
+</mat-form-field>

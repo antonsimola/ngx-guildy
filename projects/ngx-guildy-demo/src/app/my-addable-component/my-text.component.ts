@@ -3,12 +3,12 @@ import { GuildyComponent } from 'ngx-guildy';
 import { TextEditorComponent } from './text-editor/text-editor.component';
 
 @Component({
-    selector: 'app-my-addable-component',
-    templateUrl: './my-addable.component.html',
-    styleUrls: ['./my-addable.component.scss'],
+    selector: 'my-text-component',
+    templateUrl: './my-text.component.html',
+    styleUrls: ['./my-text.component.scss'],
 })
 @GuildyComponent({ name: 'Text', editorType: TextEditorComponent })
-export class MyAddableComponent implements OnInit {
+export class MyTextComponent implements OnInit {
     static counter = 0;
     id: number;
     @Input()
@@ -17,7 +17,7 @@ export class MyAddableComponent implements OnInit {
     fontSize: any;
 
     constructor() {
-        this.id = MyAddableComponent.counter++;
+        this.id = MyTextComponent.counter++;
     }
 
     ngOnInit(): void {}

@@ -1,6 +1,6 @@
 <div fxLayout="row" fxLayoutGap="32px" style="padding: 10vh">
   <div fxFlex="75" style="background-color: bisque">
-    <guildy-editor>
+    <guildy-editor (structureChange)="structure = $event">
 <!--      <app-my-flex-container #flexComponent [hostComponent]="flexComponent" guildyContainer ></app-my-flex-container>-->
       <app-my-card #cardComponent [hostComponent]="cardComponent" guildyContainer></app-my-card>
     </guildy-editor>
@@ -8,8 +8,16 @@
   <mat-divider [vertical]="true"></mat-divider>
   <div fxFlex fxLayout="column" fxLayoutGap="16px">
     <app-my-component-library></app-my-component-library>
-    <guildy-component-settings></guildy-component-settings>
+    <guildy-component-settings>
+      <div *guildyComponentSettingsHeader="let ctx" style="margin-bottom: 16px">
+        Editing: {{ctx.options.name}}
+      </div>
+      <div *guildyComponentSettingsFooter="let ctx">
+        <button (click)="ctx.deleteComponent()" color="warn" mat-stroked-button>DELETE</button>
+      </div>
+    </guildy-component-settings>
   </div>
-
 </div>
+
+<textarea [ngModel]="structure|json" rows="20" style="width: 100%"></textarea>
 

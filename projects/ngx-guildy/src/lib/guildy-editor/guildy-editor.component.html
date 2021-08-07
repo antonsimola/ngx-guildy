@@ -16,19 +16,16 @@
 <!--</div>-->
 
 <!--Capture the initial content and make it dynamic-->
-<div *ngIf="!inited" style="visibility: hidden">
+<div *ngIf="!_inited" style="visibility: hidden">
   <ng-content></ng-content>
 </div>
-
 
 <ng-container #dynRef>
 </ng-container>
 
 <!--<ng-content></ng-content>-->
 <ng-template #placeholder>
-  <div [ngStyle]="_orientation == 'vertical' ?
-   {height:'1px', width: 'auto', borderTop:'3px solid lightseagreen'}:
-  {height:'auto', minHeight:'10px', width:'3px', borderRight:'3px solid lightseagreen'}"></div>
+  <guildy-drag-placeholder></guildy-drag-placeholder>
 </ng-template>
 <ng-template #preview>
   <div style="display: none"></div>
