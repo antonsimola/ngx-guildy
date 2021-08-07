@@ -1,7 +1,5 @@
-<guildy-component-library>
-    <div fxLayout="column" fxLayoutGap="8px">
-        <ng-container *ngFor="let comp of components">
-            <button [cdkDragData]="comp.name" cdkDrag mat-stroked-button>{{ comp.name }}</button>
-        </ng-container>
-    </div>
-</guildy-component-library>
+<div fxLayout="column">
+  <guildy-component-library>
+    <button *guildyComponentItem="let ctx" mat-stroked-button>{{ ctx.name }}</button>
+  </guildy-component-library>
+</div>

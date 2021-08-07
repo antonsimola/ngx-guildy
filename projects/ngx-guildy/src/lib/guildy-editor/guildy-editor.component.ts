@@ -14,6 +14,7 @@ import {
     Output,
     QueryList,
     Renderer2,
+    SimpleChanges,
     TemplateRef,
     ViewChild,
     ViewContainerRef,
@@ -89,6 +90,18 @@ export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit, 
         this.componentConstructorsMap = this.guildyService.componentConstructorsMap;
     }
 
+    ngOnChanges(changes: SimpleChanges) {
+        if (this._depth == 0 && changes.structure) {
+            this._selfStructure = this.structure!;
+            if (this._inited) {
+                this.destroy();
+                this.guildyService.requestDestroy();
+                // if the component is already inited, we need to "reinit". Otherwise, wait for ngViewInit to trigger init
+                this.initialize();
+            }
+        }
+    }
+
     ngAfterContentInit(): void {
         //probably need to insert component here, instead of doing everything in the init...
     }
@@ -97,8 +110,13 @@ export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit, 
         this.initialize();
     }
 
+    ngOnDestroy() {
+        this.destroy();
+        this.destroySubject.complete();
+    }
+
     initialize() {
-        if (this._depth == 0) {
+        if (this._depth == 0 && !this._selfStructure) {
             this._selfStructure = {
                 id: '0',
                 inputs: {},
@@ -114,8 +132,13 @@ export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit, 
 
             if (this._depth == 0) {
                 this.guildyService.structureChanged$.pipe(takeUntil(this.destroySubject)).subscribe(e => {
-                    console.log(this._selfStructure);
                     this.structureChange.emit(JSON.parse(JSON.stringify(this._selfStructure)));
+                });
+            }
+
+            if (this._depth != 0) {
+                this.guildyService.destroyRequest$.pipe(takeUntil(this.destroySubject)).subscribe(e => {
+                    this.destroy();
                 });
             }
             this.guildyService.deleteRequested$.pipe(takeUntil(this.destroySubject)).subscribe(id => {
@@ -123,12 +146,19 @@ export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit, 
             });
         };
 
-        if (this.initialContainers.length == 0) {
-            this.init(null, cb);
-        } else {
-            this.initialContainers.forEach(e => {
-                this.init(e.hostComponent.constructor, cb);
+        if (this._selfStructure != null && this._selfStructure.children.length > 0) {
+            this._selfStructure.children.forEach((structure, i) => {
+                const component = this.componentMap.get(structure.name);
+                this.init(component?.ctor!, cb, structure, i);
             });
+        } else {
+            if (this.initialContainers.length == 0) {
+                this.init(null, cb);
+            } else {
+                this.initialContainers.forEach(e => {
+                    this.init(e.hostComponent.constructor, cb);
+                });
+            }
         }
     }
 
@@ -136,16 +166,12 @@ export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit, 
         const factory = this.componentFactoryResolver.resolveComponentFactory<GuildyEditorComponent>(content);
         const componentRef = factory.create(this.injector);
         componentRef.instance!._depth = this._depth + 1;
+
         componentRef.instance._selfStructure = newComponentStructure;
         componentRef.hostView.detectChanges();
         return {
             content: componentRef,
         };
-    }
-
-    ngOnDestroy() {
-        this.destroySubject.next(true);
-        this.destroySubject.complete();
     }
 
     initDropContainer(cb: () => void) {
@@ -195,24 +221,37 @@ export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit, 
         cb();
     }
 
-    init(componentType: ComponentType<any> | null, initCb: () => void) {
+    init(
+        componentType: ComponentType<any> | null,
+        initCb: () => void,
+        jsonStructure: ComponentStructure | null = null,
+        i = 0
+    ) {
         this.cd.detectChanges();
         this.initDropContainer(() => {
-            this.initDraggables(componentType, initCb);
+            this.initDraggables(componentType, initCb, jsonStructure, i);
         });
     }
 
-    insertComponent(componentMeta: GuildyComponentOptions, position: number) {
+    insertComponent(
+        componentMeta: GuildyComponentOptions,
+        position: number,
+        jsonStructure: ComponentStructure | null = null
+    ) {
         const componentFactory = this.componentFactoryResolver.resolveComponentFactory(componentMeta.ctor!);
 
-        const newComponentStructure = {
+        const newComponentStructure = jsonStructure ?? {
             id: uuidv4(),
             name: componentMeta.name,
             inputs: {},
             children: [],
         };
 
-        this._selfStructure.children.splice(position, 0, newComponentStructure);
+        // this means its coming from struct change by user
+        if (!jsonStructure) {
+            this._selfStructure.children.splice(position, 0, newComponentStructure);
+        }
+
         const { content } = this.resolveNgContent(GuildyEditorComponent, newComponentStructure);
         const compRef = this.draggablesViewContainerRef.createComponent(
             componentFactory,
@@ -220,7 +259,9 @@ export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit, 
             this.draggablesViewContainerRef.injector,
             [[content.location.nativeElement]]
         );
-
+        Object.entries(newComponentStructure.inputs).forEach(([k, v]) => {
+            compRef.instance![k] = v;
+        });
         const drag = this.dnd.createDrag(compRef.location);
         compRef.hostView.detectChanges();
         this.renderer.listen(compRef.location.nativeElement, 'click', e => {
@@ -294,8 +335,24 @@ export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit, 
         //copyArrayItem($event.source., $event.source.data, i, i)
     }
 
-    private initDraggables(componentType: ComponentType<any> | null, initCb: () => void) {
-        if (componentType) this.insertComponent(this.componentConstructorsMap.get(componentType)!, 0);
+    private destroy() {
+        this.dropListRef?.dispose();
+        (this.dropListRef as any) = null;
+        this.draggables.forEach(d => d.dispose());
+        this.draggables = [];
+        this.guildyService.removeDndContainer(this._dndId);
+        this.draggablesViewContainerRef?.clear();
+        this.destroySubject.next(true);
+        this.cd.detectChanges();
+    }
+
+    private initDraggables(
+        componentType: ComponentType<any> | null,
+        initCb: () => void,
+        jsonStructure: ComponentStructure | null = null,
+        i: number = 0
+    ) {
+        if (componentType) this.insertComponent(this.componentConstructorsMap.get(componentType)!, i, jsonStructure);
 
         initCb();
     }

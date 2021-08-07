@@ -1,6 +1,6 @@
-<div fxLayout="row" fxLayoutGap="32px" style="padding: 10vh">
+<div fxLayout="row" fxLayoutGap="32px" style="padding: 10vh;min-height: 50vh">
   <div fxFlex="75" style="background-color: bisque">
-    <guildy-editor (structureChange)="structure = $event">
+    <guildy-editor (structureChange)="outStructure = $event" [structure]="inStructure">
 <!--      <app-my-flex-container #flexComponent [hostComponent]="flexComponent" guildyContainer ></app-my-flex-container>-->
       <app-my-card #cardComponent [hostComponent]="cardComponent" guildyContainer></app-my-card>
     </guildy-editor>
@@ -19,5 +19,13 @@
   </div>
 </div>
 
-<textarea [ngModel]="structure|json" rows="20" style="width: 100%"></textarea>
+
+<div fxLayout="column" fxLayoutAlign="center center" style="width: 100%">
+
+  Ctrl+C -> F5 -> Ctrl+V
+  <mat-form-field style="min-width: 500px">
+    <textarea (ngModelChange)="changeStructure($event)" [ngModel]="outStructure|json" matInput placeholder="JSON Config" rows="20" ></textarea>
+  </mat-form-field>
+</div>
+
 

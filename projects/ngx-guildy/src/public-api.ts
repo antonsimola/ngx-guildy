@@ -5,6 +5,7 @@
 export * from './lib/ngx-guildy.service';
 export * from './lib/guildy-editor/guildy-editor.component';
 export * from './lib/component-library/component-library.component';
+export * from './lib/component-library/component-item.directive';
 export * from './lib/component-settings/component-settings.component';
 export * from './lib/component-settings/component-settings-header.directive';
 export * from './lib/component-settings/component-settings-footer.directive';

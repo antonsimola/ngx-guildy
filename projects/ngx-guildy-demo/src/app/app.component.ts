@@ -8,5 +8,11 @@ import { ComponentStructure } from 'ngx-guildy';
 })
 export class AppComponent {
     title = 'ngx-guildy-demo';
-    structure: ComponentStructure | undefined;
+    inStructure: ComponentStructure | undefined;
+    outStructure: ComponentStructure | undefined;
+
+    changeStructure($event: any) {
+        console.log('change');
+        this.inStructure = JSON.parse($event);
+    }
 }

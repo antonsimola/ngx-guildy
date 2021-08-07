@@ -9,7 +9,7 @@ export class CardEditorComponent implements OnInit {
     @Input()
     title: string | undefined;
     @Output()
-    titleChanged = new EventEmitter<string>();
+    titleChange = new EventEmitter<string>();
 
     constructor() {}
 

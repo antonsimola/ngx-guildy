@@ -9,7 +9,7 @@ export class TextEditorComponent implements OnInit {
     @Input()
     fontSize = 16;
     @Output()
-    fontSizeChanged = new EventEmitter<number>();
+    fontSizeChange = new EventEmitter<number>();
 
     constructor() {}
 

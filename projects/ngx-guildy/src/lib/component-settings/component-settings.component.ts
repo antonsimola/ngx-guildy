@@ -31,11 +31,7 @@ export class ComponentSettingsComponent implements OnInit {
 
     private subs: Subscription[] = [];
 
-    constructor(
-        private guildyService: NgxGuildyService,
-        private componentFactoryResolver: ComponentFactoryResolver,
-        private viewContainerRef: ViewContainerRef
-    ) {}
+    constructor(private guildyService: NgxGuildyService, private componentFactoryResolver: ComponentFactoryResolver) {}
 
     ngOnInit(): void {
         this.sub = this.guildyService.componentSelected$.subscribe(e => {
@@ -63,10 +59,6 @@ export class ComponentSettingsComponent implements OnInit {
         });
     }
 
-    ngAfterContentInit() {
-        console.log(this.footers);
-    }
-
     ngOnDestroy() {
         this.subs.forEach(s => s.unsubscribe());
         this.sub?.unsubscribe();
@@ -88,7 +80,7 @@ export class ComponentSettingsComponent implements OnInit {
         for (let output of outputs) {
             this.subs.push(
                 settingsComponentRef.instance[output.templateName].subscribe((v: any) => {
-                    const withoutChanged = output.propName.replace(new RegExp('Change[d?]$'), '');
+                    const withoutChanged = output.propName.replace(new RegExp('Change(d)?$'), '');
 
                     structure.inputs[withoutChanged] = v;
                     editorComponentRef.instance[withoutChanged] = v;

@@ -21,6 +21,7 @@ export class NgxGuildyService {
     }>();
     structureChanged$ = new Subject<any>();
     deleteRequested$ = new Subject<string>();
+    destroyRequest$ = new Subject<string>();
 
     constructor() {
         (window as any).guildyComponentConstructors.forEach((i: GuildyComponentOptions) =>
@@ -41,11 +42,17 @@ export class NgxGuildyService {
         }
     }
 
+    clearDndContainers() {}
+
     addDndContainer(id: string, ref: DropListRef) {
         this.dndContainerIds$.next([{ id, ref }, ...this.dndContainerIds$.getValue()]);
     }
 
     removeDndContainer(id: string) {
         this.dndContainerIds$.next(this.dndContainerIds$.getValue().filter(i => i.id != id));
+    }
+
+    requestDestroy() {
+        this.destroyRequest$.next();
     }
 }

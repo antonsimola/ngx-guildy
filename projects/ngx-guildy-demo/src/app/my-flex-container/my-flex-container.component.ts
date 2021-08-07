@@ -18,9 +18,9 @@ export class MyFlexContainerComponent implements OnInit {
     @Input()
     margin: number = 16;
 
-    constructor() {}
-
-    ngOnInit(): void {
+    constructor() {
         this.color = 'hsl(' + Math.round(Math.random() * 360) + ',100%, 75%)';
     }
+
+    ngOnInit(): void {}
 }

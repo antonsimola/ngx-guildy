@@ -26,8 +26,6 @@ export interface ComponentSettingsContext {
     selector: '[guildyComponentSettingsHeader]',
 })
 export class ComponentSettingsHeaderDirective {
-    data = { data: 'Hello' };
-
     constructor(private templateRef: TemplateRef<{ $implicit: ComponentSettingsContext }>) {}
 
     ngOnInit() {}

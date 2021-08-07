@@ -4,7 +4,6 @@ import { GuildyComponentOptions } from './guildy-component.decorator';
 import { ComponentLibraryComponent } from './component-library/component-library.component';
 import { CommonModule } from '@angular/common';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { DynamicComponent } from './dynamic-component/dynamic-component.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GuildyMovableDirective } from './guildy-movable.directive';
 import { GuildyContainerDirective } from './guildy-container.directive';
@@ -14,6 +13,7 @@ import { DragPlaceholderComponent } from './drag-placeholder/drag-placeholder.co
 import { ComponentSettingsHeaderDirective } from './component-settings/component-settings-header.directive';
 import { ComponentSettingsFooterDirective } from './component-settings/component-settings-footer.directive';
 import { installPatch } from './patch-dnd';
+import { GuildyComponentItemDirective } from './component-library/component-item.directive';
 
 installPatch();
 
@@ -21,7 +21,6 @@ installPatch();
     declarations: [
         GuildyEditorComponent,
         ComponentLibraryComponent,
-        DynamicComponent,
         GuildyMovableDirective,
         GuildyContainerDirective,
         ContenteditableDirective,
@@ -29,6 +28,7 @@ installPatch();
         DragPlaceholderComponent,
         ComponentSettingsHeaderDirective,
         ComponentSettingsFooterDirective,
+        GuildyComponentItemDirective,
     ],
     imports: [BrowserAnimationsModule, CommonModule, DragDropModule],
     exports: [
@@ -40,6 +40,7 @@ installPatch();
         GuildyMovableDirective,
         ContenteditableDirective,
         ComponentSettingsComponent,
+        GuildyComponentItemDirective,
     ],
 })
 export class NgxGuildyModule {

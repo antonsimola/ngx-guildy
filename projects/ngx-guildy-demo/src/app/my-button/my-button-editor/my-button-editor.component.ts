@@ -9,7 +9,7 @@ export class MyButtonEditorComponent implements OnInit {
     @Input()
     buttonText = 'Text';
     @Output()
-    buttonTextChanged = new EventEmitter<string>();
+    buttonTextChange = new EventEmitter<string>();
 
     constructor() {}
 

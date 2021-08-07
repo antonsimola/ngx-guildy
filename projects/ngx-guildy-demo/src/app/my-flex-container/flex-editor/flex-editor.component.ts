@@ -9,19 +9,19 @@ export class FlexEditorComponent implements OnInit {
     @Input()
     isRow: boolean = false;
     @Output()
-    isRowChanged = new EventEmitter<boolean>();
+    isRowChange = new EventEmitter<boolean>();
     @Input()
     color: string = '';
     @Output()
-    colorChanged = new EventEmitter<string>();
+    colorChange = new EventEmitter<string>();
 
     @Input() padding: number = 16;
     @Output()
-    paddingChanged = new EventEmitter<number>();
+    paddingChange = new EventEmitter<number>();
 
     @Input() margin: number = 16;
     @Output()
-    marginChanged = new EventEmitter<number>();
+    marginChange = new EventEmitter<number>();
 
     constructor() {}
 
