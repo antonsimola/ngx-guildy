@@ -1,32 +1,23 @@
-
-[] Directive: guildyEditing
-[] Json output: 
-
-
 # NgxGuildy
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.1.1.
+Framework for making page-builders in Angular. Inspired by [craft.js](https://craft.js.org/).
 
-## Development server
+[Demo](https://github.com/antonsimola/ngx-guildy)
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Documentation is on its way, in the meanwhile you can study the demo project.
 
-## Code scaffolding
+Any suggestions or pull requests welcome
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-## Build
+To run the development server:
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+run `start:lib` and then in another terminal `start:demo`
 
-## Running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## Todo
+- [ ] Multiple ng-select, and restrict the component
+- [ ] Nicer way to register components (would be nice with just decorator, but then build optimizer thinks component is not used)
+- [ ] Docs
+- [ ] Provided hover, selected styles by the consumer
+- [ ] Selected component wrapper, like craft.js front page demo 
+- [ ] Nicer way to provide initial components (however this seems to limit possibility: https://github.com/angular/angular/issues/8277)

@@ -51,6 +51,8 @@ export interface ComponentStructure {
 })
 export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit, AfterContentInit {
     @Input()
+    components!: ComponentType<any>[];
+    @Input()
     structure: ComponentStructure | undefined;
     @Output()
     structureChange = new EventEmitter<ComponentStructure>();

@@ -1,6 +1,9 @@
 <div fxLayout="row" fxLayoutGap="32px" style="padding: 10vh;min-height: 50vh">
   <div fxFlex="75" style="background-color: bisque">
-    <guildy-editor (structureChange)="outStructure = $event" [structure]="inStructure">
+    <guildy-editor
+
+      (structureChange)="outStructure = $event"
+      [components]="components" [structure]="inStructure">
 <!--      <app-my-flex-container #flexComponent [hostComponent]="flexComponent" guildyContainer ></app-my-flex-container>-->
       <app-my-card #cardComponent [hostComponent]="cardComponent" guildyContainer></app-my-card>
     </guildy-editor>

@@ -1,6 +1,6 @@
 {
   "name": "ngx-guildy",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "prettier": {
     "tabWidth": 4,
     "arrowParens": "avoid",
@@ -12,6 +12,9 @@
     "start:demo": "ng serve ngx-guildy-demo",
     "build:lib": "ng build  ngx-guildy",
     "build:demo": "ng build ngx-guildy-demo",
+    "copy:readme": "copyfiles ./README.md ./dist/ngx-guildy",
+    "publish:demo": "ng deploy --base-href=/ngx-guildy/ --no-silent",
+    "publish:lib": "npm run build:lib && copy:readme && npm publish ./dist/ngx-guildy",
     "test": "ng test"
   },
   "private": true,
@@ -37,6 +40,7 @@
     "@angular/compiler-cli": "~12.1.1",
     "@types/jasmine": "~3.6.0",
     "@types/node": "^12.11.1",
+    "angular-cli-ghpages": "^1.0.0-rc.2",
     "jasmine-core": "~3.7.0",
     "karma": "~6.3.0",
     "karma-chrome-launcher": "~3.1.0",
@@ -44,7 +48,7 @@
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.5.0",
     "ng-packagr": "^12.1.0",
-    "typescript": "~4.3.2",
-    "prettier": "2.3.2"
+    "prettier": "2.3.2",
+    "typescript": "~4.3.2"
   }
 }
