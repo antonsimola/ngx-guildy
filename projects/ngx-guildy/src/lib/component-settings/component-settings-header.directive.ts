@@ -14,7 +14,7 @@ export interface ComponentSettingsContext {
     /**
      * The component structure (part of json) for this component
      */
-    structure: ComponentStructure;
+    state: ComponentStructure;
 
     /**
      * Function to delete component with

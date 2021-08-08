@@ -22,7 +22,6 @@ import {
 import { NgxGuildyService } from '../ngx-guildy.service';
 import {
     CdkDragDrop,
-    CdkDragStart,
     DragDrop,
     DragRef,
     DropListOrientation,
@@ -51,11 +50,13 @@ export interface ComponentStructure {
 })
 export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit, AfterContentInit {
     @Input()
+    boolean = true;
+    @Input()
     components!: ComponentType<any>[];
     @Input()
-    structure: ComponentStructure | undefined;
+    state: ComponentStructure | undefined;
     @Output()
-    structureChange = new EventEmitter<ComponentStructure>();
+    stateChange = new EventEmitter<ComponentStructure>();
 
     @ContentChildren(GuildyContainerDirective, { descendants: true })
     initialContainers!: QueryList<GuildyContainerDirective>;
@@ -86,6 +87,13 @@ export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit, 
         private cd: ChangeDetectorRef
     ) {}
 
+    private static determineDirection(dropListElementRef: ElementRef | HTMLElement): DropListOrientation {
+        // @ts-ignore
+        const element = dropListElementRef.nativeElement ?? dropListElementRef;
+        const flexDirection = getComputedStyle(element).flexDirection;
+        return flexDirection.startsWith('row') ? 'horizontal' : 'vertical';
+    }
+
     ngOnInit(): void {
         this._dndId = this._depth == 0 ? 'guildy-editor' : uuidv4();
         this.componentMap = this.guildyService.componentMap;
@@ -93,8 +101,8 @@ export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit, 
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (this._depth == 0 && changes.structure) {
-            this._selfStructure = this.structure!;
+        if (this._depth == 0 && changes.state) {
+            this._selfStructure = this.state!;
             if (this._inited) {
                 this.destroy();
                 this.guildyService.requestDestroy();
@@ -133,13 +141,13 @@ export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit, 
             this.cd.detectChanges();
 
             if (this._depth == 0) {
-                this.guildyService.structureChanged$.pipe(takeUntil(this.destroySubject)).subscribe(e => {
-                    this.structureChange.emit(JSON.parse(JSON.stringify(this._selfStructure)));
+                this.guildyService.stateChanged$.pipe(takeUntil(this.destroySubject)).subscribe(() => {
+                    this.stateChange.emit(JSON.parse(JSON.stringify(this._selfStructure)));
                 });
             }
 
             if (this._depth != 0) {
-                this.guildyService.destroyRequest$.pipe(takeUntil(this.destroySubject)).subscribe(e => {
+                this.guildyService.destroyRequest$.pipe(takeUntil(this.destroySubject)).subscribe(() => {
                     this.destroy();
                 });
             }
@@ -192,16 +200,16 @@ export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit, 
 
         this.guildyService.addDndContainer(this._dndId, this.dropListRef);
 
-        this.dropListRef.beforeStarted.pipe(takeUntil(this.destroySubject)).subscribe(event => {
+        this.dropListRef.beforeStarted.pipe(takeUntil(this.destroySubject)).subscribe(() => {
             try {
                 this.renderer.addClass(directParent, 'cdk-drop-list-dragging');
             } catch (e) {
                 console.error(e);
             }
         });
-        this.dropListRef.entered.pipe(takeUntil(this.destroySubject)).subscribe(r => {
+        this.dropListRef.entered.pipe(takeUntil(this.destroySubject)).subscribe(() => {
             try {
-                this._orientation = this.determineDirection(directParent);
+                this._orientation = GuildyEditorComponent.determineDirection(directParent);
                 this.dropListRef.withOrientation(this._orientation);
                 this.guildyService.currentOrientation$.next(this._orientation);
             } catch (e) {
@@ -275,7 +283,7 @@ export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit, 
             this.guildyService.componentSelected$.next({
                 options: componentMeta,
                 componentRef: compRef,
-                structure: newComponentStructure,
+                state: newComponentStructure,
             });
         });
         drag.withPlaceholderTemplate({
@@ -286,7 +294,7 @@ export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit, 
         drag.data = { name: null, compRef: compRef };
         this.draggables.splice(position, 0, drag);
         this.refreshDraggables();
-        this.guildyService.structureChanged$.next();
+        this.guildyService.stateChanged$.next();
     }
 
     refreshDraggables() {
@@ -297,7 +305,7 @@ export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit, 
         this.draggablesViewContainerRef.move(this.draggablesViewContainerRef.get(from)!, to);
         moveItemInArray(this.draggables, from, to);
         moveItemInArray(this._selfStructure.children, from, to);
-        this.guildyService.structureChanged$.next();
+        this.guildyService.stateChanged$.next();
     }
 
     deleteComponent(id: string) {
@@ -307,7 +315,7 @@ export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit, 
             this.draggables.splice(foundIndex, 1);
             this._selfStructure.children.splice(foundIndex, 1);
             this.refreshDraggables();
-            this.guildyService.structureChanged$.next();
+            this.guildyService.stateChanged$.next();
         } else {
         }
     }
@@ -331,10 +339,6 @@ export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit, 
                 this.transferComponent(event);
             }
         }
-    }
-
-    copy(i: number, $event: CdkDragStart) {
-        //copyArrayItem($event.source., $event.source.data, i, i)
     }
 
     private destroy() {
@@ -394,13 +398,6 @@ export class GuildyEditorComponent implements OnInit, OnDestroy, AfterViewInit, 
         this.refreshDraggables();
         this.guildyService.refreshDropListConnections();
         newViewRef.detectChanges();
-        this.guildyService.structureChanged$.next();
-    }
-
-    private determineDirection(dropListElementRef: ElementRef | HTMLElement): DropListOrientation {
-        // @ts-ignore
-        const element = dropListElementRef.nativeElement ?? dropListElementRef;
-        const flexDirection = getComputedStyle(element).flexDirection;
-        return flexDirection.startsWith('row') ? 'horizontal' : 'vertical';
+        this.guildyService.stateChanged$.next();
     }
 }

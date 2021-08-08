@@ -39,8 +39,8 @@ export class ComponentSettingsComponent implements OnInit {
                 const ctx = {
                     options: e.options,
                     component: e.componentRef.instance,
-                    structure: e.structure,
-                    deleteComponent: () => this.delete(e.structure.id),
+                    state: e.state,
+                    deleteComponent: () => this.delete(e.state.id),
                 };
                 this.headerSlot.clear();
                 this.footerSlot.clear();
@@ -52,7 +52,7 @@ export class ComponentSettingsComponent implements OnInit {
                 const settingsCompRef = this.componentSettingSlot.createComponent(settingsFactory);
                 this.cleanSettingSubs();
                 this.setInputs(e.componentRef, settingsCompRef, settingsFactory.inputs, editorFactory);
-                this.listenOutputs(e.componentRef, settingsCompRef, settingsFactory.outputs, e.structure);
+                this.listenOutputs(e.componentRef, settingsCompRef, settingsFactory.outputs, e.state);
             } else {
                 this.componentSettingSlot.clear();
             }
@@ -75,17 +75,17 @@ export class ComponentSettingsComponent implements OnInit {
         editorComponentRef: ComponentRef<any>,
         settingsComponentRef: ComponentRef<any>,
         outputs: { propName: string; templateName: string }[],
-        structure: ComponentStructure
+        state: ComponentStructure
     ) {
         for (let output of outputs) {
             this.subs.push(
                 settingsComponentRef.instance[output.templateName].subscribe((v: any) => {
                     const withoutChanged = output.propName.replace(new RegExp('Change(d)?$'), '');
 
-                    structure.inputs[withoutChanged] = v;
+                    state.inputs[withoutChanged] = v;
                     editorComponentRef.instance[withoutChanged] = v;
                     editorComponentRef.changeDetectorRef.detectChanges();
-                    this.guildyService.structureChanged$.next();
+                    this.guildyService.stateChanged$.next();
                 })
             );
         }

@@ -17,9 +17,9 @@ export class NgxGuildyService {
     componentSelected$ = new Subject<{
         options: GuildyComponentOptions;
         componentRef: ComponentRef<any>;
-        structure: ComponentStructure;
+        state: ComponentStructure;
     }>();
-    structureChanged$ = new Subject<any>();
+    stateChanged$ = new Subject<any>();
     deleteRequested$ = new Subject<string>();
     destroyRequest$ = new Subject<string>();
 
