@@ -2,7 +2,7 @@
 
 Framework for making page-builders in Angular. Inspired by [craft.js](https://craft.js.org/).
 
-[Demo](https://github.com/antonsimola/ngx-guildy)
+[Demo](https://antonsimola.github.io/ngx-guildy/)
 
 Documentation is on its way, in the meanwhile you can study the demo project.
 
